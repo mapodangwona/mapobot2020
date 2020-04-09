@@ -1,6 +1,7 @@
 """Simple Flask webserver to handle chatbot request."""
 import json
 import os
+import time
 import traceback
 
 from flask import Flask, request
@@ -11,6 +12,16 @@ app = Flask(__name__)
 def hello():
     return 'Hello, world!'
 
+TIMER = None
+@app.route('/live'):
+def live():
+    global TIMER
+    if TIMER:
+        return 'Live'
+    TIMER = True
+    while True:
+        time.sleep(60)
+
 DATA = None
 def _load_data():
     global DATA
@@ -20,23 +31,22 @@ def _load_data():
     return DATA
 
 
-def build_fulfillment(data):
+def build_fulfillment(data: dict):
     messages = []
-    if isinstance(data, dict):
-        if 'text' in data:
-            messages.append({'text': {'text': [data['text']]}})
-        if 'image' in data:
-            messages.append({'image': {'image_uri': data['image']}})
-        if 'url' in data:
-            if isinstance(data['url'], str):
-                urls = [{'더 보기 (Link)': data['url']}]
-            else:
-                urls = data['url']
-            for url in urls:
-                for key, value in url.items():
-                    display = f'<a href="{value}">{key} (Link)</a>'
-                    messages.append({'payload': {'telegram': {'text': [display], 'parse_mode': 'HTML', 'disable_web_page_preview': True}, {'google': {"text": [display]}}}})
-        return {'fulfillment_messages': messages}
+    if 'text' in data:
+        messages.append({'text': {'text': [data['text']]}})
+    if 'image' in data:
+        messages.append({'image': {'image_uri': data['image']}})
+    if 'url' in data:
+        if isinstance(data['url'], str):
+            urls = [{'더 보기 (Link)': data['url']}]
+        else:
+            urls = data['url']
+        for url in urls:
+            for key, value in url.items():
+                display = f'<a href="{value}">{key} (Link)</a>'
+                messages.append({'payload': {'telegram': {'text': [display], 'parse_mode': 'HTML', 'disable_web_page_preview': True}, 'google': {"text": [display]}}})
+    return messages
     else:
         return {'fulfillmentText': '챗봇이 이해할 수 없는 내용이어요 ㅠㅠ'}
 
@@ -48,7 +58,11 @@ def webhook():
         intent = params['queryResult']['intent']['displayName']
         intent_param_map = _load_data()['intent_param_map']
         parameter = params['queryResult']['parameters'][intent_param_map[intent]]
-        return build_fulfillment(_load_data()[intent][parameter])
+        messages = []
+        if parameter not in params['queryResult']['queryText']:
+            messages.append({'text': {'text': [f'입력하신 내용은 {parameter} 관련으로 보여요!']}})
+        messages.extend(build_fulfillment(_load_data()[intent][parameger]))
+        return {'fulfillment_messages': messages}
     except Exception as exc:
         if False:
             return {'fulfillmentText': '챗봇 속에서 에러가 났네요 ㅠㅠ'}
