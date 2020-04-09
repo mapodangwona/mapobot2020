@@ -28,7 +28,7 @@ def webhook():
         return {'fulfillment_messages': [
             {'text': data['text']},
             {'image': data['image']},
-            {'link_out_suggestion': {'destination_name': '더보기', 'uri': data['url'}}
+            {'link_out_suggestion': {'destination_name': '더보기', 'uri': data['url']}}
         ]}
     else:
         return {'fulfillmentText': '챗봇이 이해할 수 없는 내용이어요 ㅠㅠ'}
