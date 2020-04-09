@@ -60,13 +60,13 @@ def webhook():
     try:
         intent = params['queryResult']['intent']['displayName']
         intent_param_map = _load_data()['intent_param_map']
+        messages = []
         if intent_param_map[intent] not in params['queryResult']['parameters']:
             parameter = ''
         else:
             parameter = params['queryResult']['parameters'][intent_param_map[intent]]
             if parameter not in params['queryResult']['queryText']:
                 messages.append({'text': {'text': [f'입력하신 내용은 {parameter} 관련으로 보여요!']}})
-        messages = []
         messages.extend(build_fulfillment(_load_data()[intent][parameter]))
         return {'fulfillment_messages': messages}
     except Exception as exc:
