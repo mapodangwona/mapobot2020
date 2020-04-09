@@ -54,3 +54,14 @@ def webhook():
             return {'fulfillmentText': '챗봇 속에서 에러가 났네요 ㅠㅠ'}
         else:
             return {'fulfillmentText': traceback.format_exc()}
+
+
+@app.route('/privacy')
+def privacy():
+    return 'Privacy policy under construction'
+
+
+@app.route('/eula')
+def eula():
+    return 'End-user License Agreement under construction'
+
