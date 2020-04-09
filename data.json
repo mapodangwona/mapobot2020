@@ -76,8 +76,34 @@
             "url": "https://votegreen.kr/choijb"
         }
     },
+    "officialUrl": {
+        "홈페이지": {
+            "url": [
+                {
+                    "공식 홈페이지": "http://kgreens.org"
+                },
+                {
+                    "선거 홈페이지": "http://votegreen.kr"
+                }
+            ]
+        },
+        "페이스북": {
+            "url": [
+                {
+                    "페이스북 페이지": "https://www.facebook.com/koreagreenparty/"
+                },
+                {
+                    "페이스북 그룹": "https://www.facebook.com/groups/koreagreen/"
+                }
+            ]
+        },
+        "트위터": {
+            "url": [{"트위터": "twitter.com/GreenPartyK"}]
+        }
+    },
     "intent_param_map": {
         "candidate2020": "candidatename",
-        "pledge2020": "PledgeName"
+        "pledge2020": "PledgeName",
+        "official_url": "officialurl"
     }
 }

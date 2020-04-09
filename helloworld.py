@@ -40,7 +40,7 @@ def build_fulfillment(data: dict):
         messages.append({'image': {'image_uri': data['image']}})
     if 'url' in data:
         if isinstance(data['url'], str):
-            urls = [{'더 보기 (Link)': data['url']}]
+            urls = [{'후보 정보 더 보기': data['url']}]
         else:
             urls = data['url']
         for url in urls:
