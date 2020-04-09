@@ -13,7 +13,8 @@ def hello():
     return 'Hello, world!'
 
 TIMER = None
-@app.route('/live'):
+
+@app.route('/live')
 def live():
     global TIMER
     if TIMER:
