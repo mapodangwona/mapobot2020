@@ -56,6 +56,8 @@ def webhook():
         if 'originalDetectIntentRequest' in params:
             if 'source' not in params['originalDetectIntentRequest']:
                 is_google = True
+            elif params['originalDetectIntentRequest'] in ['google', 'agent']:
+                is_google = True
         else:
             is_google = True
         if intent_param_map[intent] not in params['queryResult']['parameters']:
