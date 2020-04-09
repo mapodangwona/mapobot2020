@@ -34,7 +34,6 @@ def _load_data():
 
 def build_fulfillment(data: dict, result: dict):
     messages = result['fulfillment_messages']
-    google_items = []
     if 'text' in data:
         messages.append({'text': {'text': [data['text']]}})
     if 'image' in data:
@@ -49,12 +48,9 @@ def build_fulfillment(data: dict, result: dict):
                 display = f'<a href="{value}">{key} (Link)</a>'
                 messages.append(
                     {'payload': {
-                        'telegram': {'text': [display], 'parse_mode': 'HTML', 'disable_web_page_preview': True}}})
-                google_items.append(display)
-    if google_items:
-        # result['payload'] = {'google': {'richResponse': {'items': google_items}}}
-        result['payload'] = {'google': {'text': '\n'.join(google_items)}}
-        
+                        'telegram': {'text': [display], 'parse_mode': 'HTML', 'disable_web_page_preview': True},
+                     'google': {"expectUserResponse": True, "richResponse": {"items": [{"simpleResponse": {"displayText": display}}]}}
+                    }})
 
 
 @app.route('/webhook', methods=['POST'])
