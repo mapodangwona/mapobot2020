@@ -46,7 +46,11 @@ def build_fulfillment(data: dict):
         for url in urls:
             for key, value in url.items():
                 display = f'<a href="{value}">{key} (Link)</a>'
-                messages.append({'payload': {'telegram': {'text': [display], 'parse_mode': 'HTML', 'disable_web_page_preview': True}, 'google': {"text": [display]}}})
+                messages.append(
+                    {'payload': {
+                        'telegram': {'text': [display], 'parse_mode': 'HTML', 'disable_web_page_preview': True},
+                     'google': {"richResponse": {"items": [{"simpleResponse": {"textToSpeech": display}}]}}
+                    }})
     return messages
 
 
