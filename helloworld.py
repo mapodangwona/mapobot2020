@@ -33,7 +33,7 @@ def _load_data():
 
 
 def build_fulfillment(data: dict, result: dict):
-    messages = result['fulfillmentText']
+    messages = result['fulfillment_messages']
     google_items = []
     if 'text' in data:
         messages.append({'text': {'text': [data['text']]}})
