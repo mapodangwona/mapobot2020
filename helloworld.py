@@ -22,7 +22,7 @@ def build_fulfillment(data):
     messages = []
     if isinstance(data, dict):
         if 'text' in data:
-            messages.append({'text': {'text': data['text']]}})
+            messages.append({'text': {'text': [data['text']]}})
         if 'image' in data:
             messages.append({'image': {'image_uri': data['image']}})
         if 'url' in data:
