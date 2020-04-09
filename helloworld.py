@@ -32,7 +32,7 @@ def _load_data():
     return DATA
 
 
-def build_fulfillment(data: dict, result: dict):
+def build_fulfillment(data: dict, result: dict, is_google: bool):
     messages = result['fulfillment_messages']
     if 'text' in data:
         messages.append({'text': {'text': [data['text']]}})
@@ -40,17 +40,20 @@ def build_fulfillment(data: dict, result: dict):
         messages.append({'image': {'image_uri': data['image']}})
     if 'url' in data:
         if isinstance(data['url'], str):
-            urls = [{'후보 정보 더 보기': data['url']}]
+            urls = [{'정보 더 보기': data['url']}]
         else:
             urls = data['url']
         for url in urls:
             for key, value in url.items():
                 display = f'<a href="{value}">{key} (Link)</a>'
-                messages.append(
-                    {'payload': {
-                        'telegram': {'text': [display], 'parse_mode': 'HTML', 'disable_web_page_preview': True},
-                     'google': {"expectUserResponse": True, "richResponse": {"items": [{"simpleResponse": {"displayText": display}}]}}
-                    }})
+                if is_google:
+                    messages.append({'text': {'text': [display]}})
+                else:
+                    messages.append(
+                        {'payload': {
+                            'telegram': {'text': [display], 'parse_mode': 'HTML', 'disable_web_page_preview': True},
+                         'google': {"expectUserResponse": True, "richResponse": {"items": [{"simpleResponse": {"displayText": display}}]}}
+                        }})
 
 
 @app.route('/webhook', methods=['POST'])
@@ -60,13 +63,17 @@ def webhook():
         intent = params['queryResult']['intent']['displayName']
         intent_param_map = _load_data()['intent_param_map']
         result = {'fulfillment_messages': []}
+        is_google = False
+        if 'originalDetectIntentRequest' in params:
+            source = params['originalDetectIntentRequest']['source']
+            is_google = source == 'google'
         if intent_param_map[intent] not in params['queryResult']['parameters']:
             parameter = ''
         else:
             parameter = params['queryResult']['parameters'][intent_param_map[intent]]
             if parameter not in params['queryResult']['queryText']:
                 result['fulfillment_messages'].append({'text': {'text': [f'입력하신 내용은 {parameter} 관련으로 보여요!']}})
-        build_fulfillment(_load_data()[intent][parameter], result)
+        build_fulfillment(_load_data()[intent][parameter], result, is_google)
         return result
     except Exception as exc:
         if False:
