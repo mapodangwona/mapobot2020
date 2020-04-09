@@ -98,7 +98,10 @@
             ]
         },
         "트위터": {
-            "url": [{"트위터": "twitter.com/GreenPartyK"}]
+            "url": [{"트위터": "https://twitter.com/GreenPartyK"}]
+        },
+        "인스타그램": {
+            "url": [{"인스타그램": "https://www.instagram.com/greenpartykr"}]
         }
     },
     "intent_param_map": {
