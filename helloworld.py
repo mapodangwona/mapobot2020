@@ -15,6 +15,6 @@ def webhook():
     with open('data.json', 'r') as ifile:
         data = json.load(ifile)
 
-    result = data['releaseDate'] + json.dumps(request)
+    result = {'got': json.dumps(request), 'release': data['releaseDate']}
 
-    return {'fulfillmentText': result}
+    return {'fulfillmentText': json.dumps(result)}
