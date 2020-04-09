@@ -36,7 +36,7 @@ def build_fulfillment(data):
                 for key, value in url.items():
                     display = f'<a href="{value}">key (Link)</a>'
                     messages.append({'text': {'text': [display], 'parse_mode': 'HTML', 'disable_web_preview': True}})
-        return {'fulfillment_messages': messages}
+        return {'fulfillment_messages': messages, 'payload': {'telegram': {'text': '<a href="https://votegreen.kr">hello</a> world', 'parse_mode': 'HTML', 'disable_web_preview': True}}}
     else:
         return {'fulfillmentText': '챗봇이 이해할 수 없는 내용이어요 ㅠㅠ'}
 
