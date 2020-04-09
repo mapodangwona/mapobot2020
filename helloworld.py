@@ -1,7 +1,9 @@
+"""Simple Flask webserver to handle chatbot request."""
 import json
 import os
 import traceback
-from flask import Flask, request, make_response, jsonify
+
+from flask import Flask, request
 
 app = Flask(__name__)
 
@@ -32,7 +34,7 @@ def build_fulfillment(data):
                 for url in data['url']:
                     for key, value in url.items():
                         messages.append({'text': {'text': [key + ': ' + value]}})
-        return messages
+        return {'fulfillment_messages': messages}
     else:
         return {'fulfillmentText': '챗봇이 이해할 수 없는 내용이어요 ㅠㅠ'}
 
