@@ -51,7 +51,7 @@ def webhook():
     try:
         intent = params['queryResult']['intent']['displayName']
         intent_param_map = _load_data()['intent_param_map']
-        result = {'fulfillment_messages': []}
+        result = {'fulfillment_messages': [], 'fulfillmentText': ""}
         is_google = False
         if 'originalDetectIntentRequest' in params:
             if 'source' not in params['originalDetectIntentRequest']:
