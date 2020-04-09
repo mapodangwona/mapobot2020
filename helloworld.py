@@ -10,11 +10,11 @@ def hello():
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
-    request = request.get_json(force=True)
+    params = request.get_json(force=True)
     
     with open('data.json', 'r') as ifile:
         data = json.load(ifile)
 
-    result = {'got': json.dumps(request), 'release': data['releaseDate']}
+    result = {'got': json.dumps(params), 'release': data['releaseDate']}
 
     return {'fulfillmentText': json.dumps(result)}
