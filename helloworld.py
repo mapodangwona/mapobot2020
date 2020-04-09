@@ -32,8 +32,9 @@ def _load_data():
     return DATA
 
 
-def build_fulfillment(data: dict):
-    messages = []
+def build_fulfillment(data: dict, result: dict):
+    messages = result['fulfillmentText']
+    google_items = []
     if 'text' in data:
         messages.append({'text': {'text': [data['text']]}})
     if 'image' in data:
@@ -48,10 +49,11 @@ def build_fulfillment(data: dict):
                 display = f'<a href="{value}">{key} (Link)</a>'
                 messages.append(
                     {'payload': {
-                        'telegram': {'text': [display], 'parse_mode': 'HTML', 'disable_web_page_preview': True},
-                     'google': {"richResponse": {"items": [{"simpleResponse": {"textToSpeech": display}}]}}
-                    }})
-    return messages
+                        'telegram': {'text': [display], 'parse_mode': 'HTML', 'disable_web_page_preview': True}}})
+                google_items.append({"simpleResponse": {"textToSpeech": display}})
+    if google_items:
+        result['payload'] = {'google': {'richResponse': {'items': google_items}}}
+        
 
 
 @app.route('/webhook', methods=['POST'])
@@ -60,15 +62,15 @@ def webhook():
     try:
         intent = params['queryResult']['intent']['displayName']
         intent_param_map = _load_data()['intent_param_map']
-        messages = []
+        result = {'fulfillment_messages': []}
         if intent_param_map[intent] not in params['queryResult']['parameters']:
             parameter = ''
         else:
             parameter = params['queryResult']['parameters'][intent_param_map[intent]]
             if parameter not in params['queryResult']['queryText']:
-                messages.append({'text': {'text': [f'입력하신 내용은 {parameter} 관련으로 보여요!']}})
-        messages.extend(build_fulfillment(_load_data()[intent][parameter]))
-        return {'fulfillment_messages': messages}
+                result['fulfillment_messages'].append({'text': {'text': [f'입력하신 내용은 {parameter} 관련으로 보여요!']}})
+        build_fulfillment(_load_data()[intent][parameter], result)
+        return result
     except Exception as exc:
         if False:
             return {'fulfillmentText': '챗봇 속에서 에러가 났네요 ㅠㅠ'}
