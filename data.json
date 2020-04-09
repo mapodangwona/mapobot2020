@@ -1,3 +1,10 @@
 {
-    "releaseDate": "2020-04-09"
+    "releaseDate": "2020-04-09",
+    "candidate": {
+        "고은영": {
+            "image": "https://cdn.imweb.me/thumbnail/20200309/9d934c890358a.png",
+            "text": "비례대표 1번\n고은영 | 정당인\n제주녹색당 공동운영위원장 / 녹색당 미세먼지 기후변화 대책위원장 / (전)녹색당 제주도지사 후보",
+            "url": "https://votegreen.kr/koey"
+        }
+    }
 }
