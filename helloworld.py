@@ -29,11 +29,13 @@ def build_fulfillment(data):
             messages.append({'image': {'image_uri': data['image']}})
         if 'url' in data:
             if isinstance(data['url'], str):
-                messages.append({'text': {'text': ['더보기: ' + data['url']]}})
+                urls = [{'더 보기 (Link)': data['url']}]
             else:
-                for url in data['url']:
-                    for key, value in url.items():
-                        messages.append({'text': {'text': [key + ': ' + value]}})
+                urls = data['url']
+            for url in urls:
+                for key, value in url.items():
+                    display = f'<a href="{value}">key (Link)</a>'
+                    messages.append({'text': {'text': [display], 'parse_mode': 'HTML', 'disable_web_preview': True}})
         return {'fulfillment_messages': messages}
     else:
         return {'fulfillmentText': '챗봇이 이해할 수 없는 내용이어요 ㅠㅠ'}
