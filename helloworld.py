@@ -1,6 +1,5 @@
 """Simple Flask webserver to handle chatbot request."""
 import json
-import os
 import time
 import traceback
 
@@ -10,18 +9,8 @@ app = Flask(__name__)
 
 @app.route('/')
 def hello():
-    return 'Hello, world!'
+    return 't.me/mapodangwon_2020_bot'
 
-TIMER = None
-
-@app.route('/live')
-def live():
-    global TIMER
-    if TIMER:
-        return 'Live'
-    TIMER = True
-    while True:
-        time.sleep(60)
 
 DATA = None
 def _load_data():
@@ -30,6 +19,8 @@ def _load_data():
         with open('data.json', 'r') as ifile:
             DATA = json.load(ifile)
     return DATA
+
+DEBUGGING_NOW = True
 
 
 def build_fulfillment(data: dict, result: dict, is_google: bool):
@@ -49,11 +40,9 @@ def build_fulfillment(data: dict, result: dict, is_google: bool):
                 if is_google:
                     messages.append({'text': {'text': [display]}})
                 else:
-                    messages.append(
-                        {'payload': {
-                            'telegram': {'text': [display], 'parse_mode': 'HTML', 'disable_web_page_preview': True},
-                         'google': {"expectUserResponse": True, "richResponse": {"items": [{"simpleResponse": {"displayText": display}}]}}
-                        }})
+                    messages.append({'payload': {
+                        'telegram': {'text': [display], 'parse_mode': 'HTML',
+                                     'disable_web_page_preview': True}}})
 
 
 @app.route('/webhook', methods=['POST'])
@@ -65,18 +54,19 @@ def webhook():
         result = {'fulfillment_messages': []}
         is_google = False
         if 'originalDetectIntentRequest' in params:
-            if 'source' not in params['originalDetectIntentRequest']['source']:
+            if 'source' not in params['originalDetectIntentRequest']:
                 is_google = True
         if intent_param_map[intent] not in params['queryResult']['parameters']:
             parameter = ''
         else:
             parameter = params['queryResult']['parameters'][intent_param_map[intent]]
             if parameter not in params['queryResult']['queryText']:
-                result['fulfillment_messages'].append({'text': {'text': [f'입력하신 내용은 {parameter} 관련으로 보여요!']}})
+                result['fulfillment_messages'].append({'text': {'text': [
+                    f'입력하신 내용은 {parameter} 관련으로 보여요!']}})
         build_fulfillment(_load_data()[intent][parameter], result, is_google)
         return result
-    except Exception as exc:
-        if False:
+    except Exception:  # pylint: disable=broad-except
+        if not DEBUGGING_NOW:
             return {'fulfillmentText': '챗봇 속에서 에러가 났네요 ㅠㅠ'}
         else:
             return {'fulfillmentText': traceback.format_exc()}
