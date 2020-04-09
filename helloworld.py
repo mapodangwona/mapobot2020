@@ -31,7 +31,7 @@ def build_fulfillment(data):
             else:
                 for url in data['url']:
                     for key, value in url.items():
-                        messages.append({'text': {'text': [key + ': ' + value}})
+                        messages.append({'text': {'text': [key + ': ' + value]}})
     else:
         return {'fulfillmentText': '챗봇이 이해할 수 없는 내용이어요 ㅠㅠ'}
 
