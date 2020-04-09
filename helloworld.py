@@ -48,8 +48,6 @@ def build_fulfillment(data: dict):
                 display = f'<a href="{value}">{key} (Link)</a>'
                 messages.append({'payload': {'telegram': {'text': [display], 'parse_mode': 'HTML', 'disable_web_page_preview': True}, 'google': {"text": [display]}}})
     return messages
-    else:
-        return {'fulfillmentText': '챗봇이 이해할 수 없는 내용이어요 ㅠㅠ'}
 
 
 @app.route('/webhook', methods=['POST'])
@@ -62,7 +60,7 @@ def webhook():
         messages = []
         if parameter not in params['queryResult']['queryText']:
             messages.append({'text': {'text': [f'입력하신 내용은 {parameter} 관련으로 보여요!']}})
-        messages.extend(build_fulfillment(_load_data()[intent][parameger]))
+        messages.extend(build_fulfillment(_load_data()[intent][parameter]))
         return {'fulfillment_messages': messages}
     except Exception as exc:
         if False:
