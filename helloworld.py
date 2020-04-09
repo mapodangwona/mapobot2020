@@ -26,8 +26,8 @@ def webhook():
         candidatename = params['queryResult']['parameters']['candidatename']
         data = _load_data()['candidate'][candidatename]
         return {'fulfillment_messages': [
-            {'text': data['text']},
-            {'image': data['image']},
+            {'text': {'text': [data['text']]}},
+            {'image': {'image_uri': data['image']}},
             {'link_out_suggestion': {'destination_name': '더보기', 'uri': data['url']}}
         ]}
     else:
