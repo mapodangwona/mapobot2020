@@ -23,8 +23,9 @@ def _load_data():
 DEBUGGING_NOW = True
 
 
-def build_fulfillment(data: dict, result: dict, is_google: bool):
+def build_fulfillment(data: dict, result: dict, is_google: bool, agent_intel: str):
     messages = result['fulfillment_messages']
+    messages.append({'text': {'text': ['Agent intel: ' + agent_intel]}})
     if 'text' in data:
         messages.append({'text': {'text': [data['text']]}})
     if 'image' in data:
@@ -56,10 +57,14 @@ def webhook():
         if 'originalDetectIntentRequest' in params:
             if 'source' not in params['originalDetectIntentRequest']:
                 is_google = True
-            elif params['originalDetectIntentRequest'] in ['google', 'agent']:
-                is_google = True
+                agent_intel = 'type 0'
+            else:
+                if params['originalDetectIntentRequest']['source'] in ['google', 'agent']:
+                    is_google = True
+                agent_intel = params['originalDetectIntentRequest']['source']
         else:
             is_google = True
+            agent_intel = 'type 1'
         if intent_param_map[intent] not in params['queryResult']['parameters']:
             parameter = ''
         else:
@@ -67,7 +72,7 @@ def webhook():
             if parameter not in params['queryResult']['queryText']:
                 result['fulfillment_messages'].append({'text': {'text': [
                     f'입력하신 내용은 {parameter} 관련으로 보여요!']}})
-        build_fulfillment(_load_data()[intent][parameter], result, is_google)
+        build_fulfillment(_load_data()[intent][parameter], result, is_google, agent_intel)
         return result
     except Exception:  # pylint: disable=broad-except
         if not DEBUGGING_NOW:
