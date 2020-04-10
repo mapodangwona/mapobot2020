@@ -29,7 +29,18 @@ def build_fulfillment(data: dict, result: dict, is_google: bool, agent_intel: st
     if 'text' in data:
         messages.append({'text': {'text': [data['text']]}})
     if 'image' in data:
-        messages.append({'image': {'image_uri': data['image']}})
+        if is_google:
+            messages.append({'payload': {
+                'richContent': [
+                     {
+                         'type': 'image',
+                         'rawUrl': data['image'],
+                         'accessibilityText': data['image']
+                     }
+                 ]
+            })
+        else:
+            messages.append({'image': {'image_uri': data['image']}})
     if 'url' in data:
         if isinstance(data['url'], str):
             urls = [{'정보 더 보기': data['url']}]
