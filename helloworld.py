@@ -38,7 +38,7 @@ def build_fulfillment(data: dict, result: dict, is_google: bool, agent_intel: st
                          'accessibilityText': data['image']
                      }
                  ]
-            })
+            }})
         else:
             messages.append({'image': {'image_uri': data['image']}})
     if 'url' in data:
@@ -101,3 +101,14 @@ def privacy():
 def eula():
     return 'End-user License Agreement under construction'
 
+
+@app.route('/demo')
+def demo():
+    return '''<html><body><script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+<df-messenger
+  intent="WELCOME"
+  chat-title="MapoBot2020"
+  agent-id="44ed1a4d-1f83-4e1a-bdb2-aee223dbf87c"
+  language-code="ko"
+></df-messenger>
+</body></html>'''
