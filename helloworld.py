@@ -67,6 +67,9 @@ def webhook():
         intent_param_map = _load_data()['intent_param_map']
         result = {'fulfillment_messages': [], 'fulfillmentText': ""}
         is_google = False
+        if intent == 'current':
+            result['fulfillment_messages'].append({'payload': {'telegram': {'text': '\n'.join(nec.stat()[0])}}})
+            return result
         if 'originalDetectIntentRequest' in params:
             if 'source' not in params['originalDetectIntentRequest']:
                 is_google = True
@@ -78,10 +81,6 @@ def webhook():
         else:
             is_google = True
             agent_intel = 'type 1'
-        if intent not in intent_para_map:
-            if intent == 'current':
-                result['fulfillment_messages'].append({'payload': {'telegram': {'text': '\n'.join(nec.stat()[0])}}})
-                return result
         if intent_param_map[intent] not in params['queryResult']['parameters']:
             parameter = ''
         else:
