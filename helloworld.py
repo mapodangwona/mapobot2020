@@ -5,6 +5,8 @@ import traceback
 
 from flask import Flask, request
 
+import nec
+
 app = Flask(__name__)
 
 @app.route('/')
@@ -112,3 +114,9 @@ def demo():
   language-code="ko"
 ></df-messenger>
 </body></html>'''
+
+
+@app.route('/nec')
+def nec():
+    _, stat = nec.stat()
+    return '\n'.join(stat)
