@@ -1,4 +1,5 @@
 flask
 gunicorn
 requests
+lxml
 beautifulsoup4
