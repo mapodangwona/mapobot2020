@@ -68,7 +68,7 @@ def webhook():
         result = {'fulfillment_messages': [], 'fulfillmentText': ""}
         is_google = False
         if intent == 'current':
-            result['fulfillment_messages'].append({'payload': {'telegram': {'text': '<br />\n'.join(nec.stat()[0], 'parse_mode': 'HTML')}}})
+            result['fulfillment_messages'].append({'payload': {'telegram': {'text': '<br />\n'.join(nec.stat()[0]), 'parse_mode': 'HTML'}}})
             return result
         if 'originalDetectIntentRequest' in params:
             if 'source' not in params['originalDetectIntentRequest']:
