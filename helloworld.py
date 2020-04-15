@@ -117,6 +117,12 @@ def demo():
 
 
 @app.route('/nec')
-def nec():
+def show_nec():
     _, stat = nec.stat()
     return '\n'.join(stat)
+
+@app.route('/nectext')
+def show_nec_text():
+    stat, _ = nec.stat()
+    string = '\n'.join(stat)
+    return '<pre>' + string + '</pre>'
