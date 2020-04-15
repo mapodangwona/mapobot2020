@@ -78,7 +78,6 @@ def stat():
         [['코리아', '가자!평화인권당', '가자환경당', '국민새정당', '국민참여신당', '깨어있는시민연대당', '남북통일당', '대한당', '대한민국당', '미래민주당', '새누리당', '우리당', '자유당', '자영업당', '충청의미래당', '통일민주당', '한국복지당', '홍익당', '새벽당', '한국경제당']],
         [['계'], ['무효투표수'], ['개표율']]]
     alias = {'국가혁명배당금당': '허경영당', '기독자유통일당': '김문수당'}
-    result.append(f'득표율 {timestamp}')
     for section in beautify:
         for element in section:
             number_1 = 0
@@ -104,6 +103,7 @@ def stat():
         htmls.append(f'<tr><td>{name}</td><td>{"%.2f" % no2}</td><td>{no1}</td></tr>')
     htmls.append('</table>')
     htmls.append('</html>')
+    result_strs = [f'득표율 {timestamp}'] + result_strs
     return result_strs, htmls
     
 
